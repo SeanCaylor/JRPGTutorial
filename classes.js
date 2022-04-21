@@ -25,7 +25,7 @@ class Boundary {
      * @memberof Boundary
      */
     draw() {
-        c.fillStyle = "rgba(255, 0, 0, 0.5)"; // <=<< final value 0 = invisible - 1 = red
+        c.fillStyle = "rgba(255, 0, 0, 0)"; // <=<< final value 0 = invisible - 1 = red
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
@@ -138,6 +138,8 @@ class Monster extends Sprite {
         g.to(this, {
             opacity: 0,
         });
+        audio.battle.stop();
+        audio.victory.play();
     }
     //attack function and animations
     attack({ attack, recipient, renderedSprites }) {
@@ -150,6 +152,7 @@ class Monster extends Sprite {
         recipient.health -= attack.damage;
         switch (attack.name) {
             case "Fireball":
+                audio.initFireball.play();
                 let rotation = 1;
                 if (this.isEnemy) rotation = -2.2;
                 const fireballImage = new Image();
@@ -172,6 +175,7 @@ class Monster extends Sprite {
                     x: recipient.position.x,
                     y: recipient.position.y,
                     onComplete: () => {
+                        audio.fireballHit.play();
                         g.to(healthBar, {
                             width: recipient.health + "%",
                         });
@@ -202,6 +206,7 @@ class Monster extends Sprite {
                         x: this.position.x + movementDistance * 2,
                         duration: 0.1,
                         onComplete: () => {
+                            audio.tackleHit.play();
                             g.to(healthBar, {
                                 width: recipient.health + "%",
                             });
